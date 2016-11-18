@@ -14,6 +14,9 @@ post '/gateway' do
   when 'move'
     handle_move_message(action_params, user_id)
 
+  when 'resign'
+    handle_resignation(user_id)
+
   when 'help'
     handle_help_messages(action_params, user_name)
   end
@@ -32,6 +35,11 @@ end
 def parse_move_params params
   params = params.split('-') if params.size == '1' && params.first.include?('-')
   params
+end
+
+def handle_resignation(user_id)
+  Game.resign(user_id)
+  respond_message "Haha. You're a loser!"
 end
 
 

@@ -28,6 +28,11 @@ class Game
       computer_move
     end
 
+    def resign(user_id)
+      @redis ||= Redis.new
+      @redis.del("Move::#{user_id}")
+    end
+
     def store_moves(user_id, moves)
       @redis ||= Redis.new
       @redis.set("Move::#{user_id}", moves)
