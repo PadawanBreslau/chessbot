@@ -2,18 +2,20 @@ require 'sinatra'
 require 'json'
 require './game'
 
+
+# token,team_id,team_domain,service_id,channel_id,channel_name,timestamp,user_id,user_name,text,trigger_word
 post '/gateway' do
-  user = params.keys.join(',')
+  user_name = params[:user_name]
+  user_id = params[:user_id]
   message = params[:text]
-  action, *params = message.split(' ')
+  action, *action_params = message.split(' ')
   case action
-  when 'start'
-    @game = Game.new
+  #when 'start'
   when 'move'
-    handle_move_message(params)
+    handle_move_message(action_params, user_id)
 
   when 'help'
-    handle_help_messages(params, user)
+    handle_help_messages(action_params, user_name)
   end
 
 end
@@ -33,21 +35,19 @@ def parse_move_params params
 end
 
 
-def handle_move_message params
-  return respond_message 'You need to start the game first' unless @game
+def handle_move_message(params, user_id)
   start_move, finish_move = parse_move_params(params)
   validate_move_valid?(start_move, finish_move)
-  execute_move(start_move, finish_move)
-  answer = prepare_answer
+  answer = execute_move(start_move, finish_move, user_id)[:variation][0..3]
  
   respond_message answer
 end
 
 
-def handle_help_messages params, user
+def handle_help_messages(params, user_name)
   if params.empty?
     help_msg = ""
-    help_msg << "Glad you asked: #{user}. Avaliable commands: start move eval resign draw"
+    help_msg << "Glad you asked: #{user_name}. Avaliable commands: start move eval resign draw"
     respond_message help_msg
   else
     help_msg = ""
@@ -68,13 +68,9 @@ def validate_move_valid?(start_field, finish_field)
   #TODO raise error and return
 end
 
-def execute_move(start_field, finish_field)
-  true
-  # @game.execute_move(start_field, finish_field)
+def execute_move(start_field, finish_field, user_id)
+  Game.execute_move(start_field, finish_field, user_id)
   #TODO raise error and return
 end
 
-def prepare_answer
-  'e7-e5'
-end
 

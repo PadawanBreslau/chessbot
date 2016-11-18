@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/PadawanBreslau/philio-uci
+  revision: 44842e9ccb21602e9dc3c975f16deeee28439a99
+  specs:
+    philio_uci (0.0.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -10,6 +16,7 @@ GEM
     rack (1.6.5)
     rack-protection (1.5.3)
       rack
+    redis (3.2.2)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -21,7 +28,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  philio_uci!
   pry
+  redis
   sinatra
 
 BUNDLED WITH
